@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Providers } from "./providers";
+import { Toaster } from "@/components/toast/toaster";
 
 export const metadata = {
   title: "Mi IMSS Salud",
@@ -20,7 +21,10 @@ export default function RootLayout({
     <html lang="es" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
-          <Providers>{children}</Providers>
+          <Providers>
+            {children}
+            <Toaster />
+          </Providers>
         </TRPCReactProvider>
       </body>
     </html>
