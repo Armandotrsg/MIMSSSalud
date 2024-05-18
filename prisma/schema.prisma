@@ -15,67 +15,58 @@ datasource db {
 }
 
 model Paciente {
-    id                          String   @id @default(cuid())
-    nombre                      String
-    apellidoPaterno             String
-    apellidoMaterno             String
-    fechaNacimiento             DateTime
-    curp                        String
-    nss                         String
-    genero                      String
-    padecimientosHereditarios   String
-    consultas                   Consulta[]   // Relación uno a muchos
-    medicamentos                Medicamento[]   // Relación uno a muchos
-    enfermedades                Enfermedad[]   // Relación uno a muchos
-}
-
-model Doctor {
-    id                          String   @id @default(cuid())
-    nombre                      String
-    apellidoPaterno             String
-    apellidoMaterno             String
-    email                       String
-    password                    String
-    curp                        String
-    especialidad                String
-    consultas                   Consulta[]   // Relación uno a muchos
+    id                        String        @id @default(cuid())
+    nombre                    String
+    apellidoPaterno           String
+    apellidoMaterno           String
+    fechaNacimiento           DateTime
+    curp                      String
+    nss                       String
+    genero                    String
+    padecimientosHereditarios String
+    consultas                 Consulta[] // Relación uno a muchos
+    medicamentos              Medicamento[] // Relación uno a muchos
+    enfermedades              Enfermedad[] // Relación uno a muchos
 }
 
 model Consulta {
-    id                          String   @id @default(cuid())
-    paciente                    Paciente   @relation(fields: [idPaciente], references: [id])
-    idPaciente                  String
-    doctor                      Doctor     @relation(fields: [idDoctor], references: [id])
-    idDoctor                    String
-    fechaConsulta               DateTime
-    motivoConsulta              String
-    diagnostico                 String
-    tratamiento                 String
-    proximaCita                 DateTime
+    id             String   @id @default(cuid())
+    paciente       Paciente @relation(fields: [idPaciente], references: [id])
+    idPaciente     String
+    doctor         User   @relation(fields: [idDoctor], references: [id])
+    idDoctor       String
+    fechaConsulta  DateTime
+    motivoConsulta String
+    diagnostico    String
+    tratamiento    String
+    proximaCita    DateTime
+
     @@index([idPaciente])
     @@index([idDoctor])
 }
 
 model Medicamento {
-    id                          String   @id @default(cuid())
-    paciente                    Paciente   @relation(fields: [idPaciente], references: [id])
-    idPaciente                  String
-    nombre                      String
-    descripcion                 String
-    dosis                       String
-    indicaciones                String
-    fechaCaducidad              DateTime
+    id             String   @id @default(cuid())
+    paciente       Paciente @relation(fields: [idPaciente], references: [id])
+    idPaciente     String
+    nombre         String
+    descripcion    String
+    dosis          String
+    indicaciones   String
+    fechaCaducidad DateTime
+
     @@index([idPaciente])
 }
 
 model Enfermedad {
-    id                          String   @id @default(cuid())
-    paciente                    Paciente   @relation(fields: [idPaciente], references: [id])
-    idPaciente                  String
-    nombre                      String
-    descripcion                 String
-    sintomas                    String
-    tratamiento                 String
+    id          String   @id @default(cuid())
+    paciente    Paciente @relation(fields: [idPaciente], references: [id])
+    idPaciente  String
+    nombre      String
+    descripcion String
+    sintomas    String
+    tratamiento String
+
     @@index([idPaciente])
 }
 
@@ -110,13 +101,19 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    id              String    @id @default(cuid())
+    nombre          String?
+    apellidoPaterno String
+    apellidoMaterno String
+    password        String
+    curp            String
+    especialidad    String
+    email           String?   @unique
+    emailVerified   DateTime?
+    image           String?
+    accounts        Account[]
+    sessions        Session[]
+    consultas       Consulta[] // Relación uno a muchos
 }
 
 model VerificationToken {
