@@ -30,7 +30,7 @@ importers:
         specifier: ^5.10.2
         version: 5.14.0(@planetscale/database@1.18.0)
       '@prisma/client':
-        specifier: ^5.10.2
+        specifier: ^5.14.0
         version: 5.14.0(prisma@5.14.0)
       '@radix-ui/react-toast':
         specifier: ^1.1.5

@@ -17,19 +17,20 @@ enum Sex {
 }
 
 model Paciente {
-    id                        String        @id @default(cuid())
-    nombre                    String
-    apellidoPaterno           String
-    apellidoMaterno           String
-    fechaNacimiento           DateTime
-    curp                      String
-    nss                       String
-    sexo                      Sex
-    padecimientosHereditarios String
-    consultas                 Consulta[] // Relación uno a muchos
-    medicamentos              Medicamento[] // Relación uno a muchos
-    enfermedades              Enfermedad[] // Relación uno a muchos
+  id                        String        @id @default(cuid())
+  nombre                    String
+  apellidoPaterno           String
+  apellidoMaterno           String
+  fechaNacimiento           DateTime
+  curp                      String        @unique
+  nss                       String
+  genero                    String
+  padecimientosHereditarios String
+  consultas                 Consulta[] // Relación uno a muchos
+  medicamentos              Medicamento[] // Relación uno a muchos
+  enfermedades              Enfermedad[] // Relación uno a muchos
 }
+
 
 model Consulta {
     id             String   @id @default(cuid())
