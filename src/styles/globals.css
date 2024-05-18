@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ShadCN Toast */
+@layer base {
+  :root {
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Responsive Colors */
+    --black: #000;
+    --darkergrey: #444;
+    --darkgrey: #555;
+    --grey: #999;
+    --lightgrey: #ddd;
+    --lightergrey: #eee;
+    --white: #fff;
+
+    /* Responsive font sizes */
+    --4XL: max(min(3vw, 4rem), 2.5rem);
+    --XXXL: max(min(2.7vw, 3rem), 2rem);
+    --XXL: max(min(2.5vw, 2.5rem), 1.7rem);
+    --XL: max(min(2.3vw, 2.2rem), 1.5rem);
+    --LG: max(min(2.2vw, 1.9rem), 1.05rem);
+    --L: max(min(2.2vw, 1.8rem), 0.9rem);
+    --M: max(min(1.9vw, 1.5rem), 0.85rem);
+    --S: max(min(1.7vw, 1.2rem), 0.8rem);
+    --XS: max(min(1vw, 1rem), 0.75rem);
+    --XXS: max(min(1vw, 1rem), 0.7rem);
+
+    /* Effects */
+    --glow: 0 0 7px 3px rgba(0, 0, 0, 0.2);
+
+    --shortglow: 0 0 2px 2px rgba(0, 0, 0, 0.05);
+    --shorterglow: 0 0 1px 1px rgba(0, 0, 0, 0.06);
+    --extraglow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+
+    --topglow: 0 -10px 10px -10px rgba(0, 0, 0, 0.2);
+    --bottomglow: 0 10px 10px -10px rgba(0, 0, 0, 0.2);
+    --topandbottomglow: 0 -10px 10px -10px #e8e8e8, 0 10px 10px -10px #e8e8e8;
+  }
+
+  main {
+    @apply my-5 px-5 xl:container lg:px-10 xl:mx-auto;
+  }
+
+  .dark {
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+  }
+}
