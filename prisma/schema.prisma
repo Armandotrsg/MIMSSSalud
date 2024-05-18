@@ -24,7 +24,7 @@ model Paciente {
   fechaNacimiento           DateTime
   curp                      String        @unique
   nss                       String
-  genero                    String
+  sexo                      Sex
   padecimientosHereditarios String
   consultas                 Consulta[] // Relación uno a muchos
   medicamentos              Medicamento[] // Relación uno a muchos

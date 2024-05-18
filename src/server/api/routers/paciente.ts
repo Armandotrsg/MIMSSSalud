@@ -1,10 +1,9 @@
 import { z } from "zod";
 
-import { Prisma, PrismaClient } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 
 import {
   createTRPCRouter,
-  publicProcedure,
   protectedProcedure
 } from "@/server/api/trpc";
 
@@ -85,7 +84,7 @@ export const pacienteRouter = createTRPCRouter({
           fechaNacimiento: true,
           curp: true,
           nss: true,
-          genero: true,
+          sexo: true,
           padecimientosHereditarios: true,
         },
       });
@@ -116,11 +115,6 @@ export const pacienteRouter = createTRPCRouter({
   getById: protectedProcedure
     .input(getByIdInputSchema) // Especificar el esquema de entrada
     .query(async ({ input, ctx }) => {
-      // Verificar si input es válido
-      if (!input || !input.id) {
-        throw new Error("ID parameter is missing");
-      }
-
       // Obtener el paciente por su ID
       const paciente = await ctx.db.paciente.findUnique({
         where: { id: input.id },
@@ -146,21 +140,26 @@ export const pacienteRouter = createTRPCRouter({
    * @returns {Object} El paciente recién creado.
    */
 
-  create: protectedProcedure.mutation(async ({ input, ctx }) => {
-    // Verificar si input está definido
-    if (!input) {
-      throw new Error("Input parameter is missing");
-    }
+  create: protectedProcedure
+  .input(
+    z.object({
+      nombre: z.string(),
+      apellidoPaterno: z.string(),
+      apellidoMaterno: z.string(),
+      fechaNacimiento: z.date(),
+      curp: z.string(),
+      nss: z.string(),
+      sexo: z.enum(["MASCULINO", "FEMENINO"]),
+      padecimientosHereditarios: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
     
     // Extraer los datos del paciente del objeto de entrada
-    const { nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, curp, nss, genero, padecimientosHereditarios } = input;
+    const { nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, curp, nss, sexo, padecimientosHereditarios } = input;
   
-    // Verificar si se proporcionaron todos los campos necesarios
-    if (!nombre || !apellidoPaterno || !apellidoMaterno || !fechaNacimiento || !curp || !nss || !genero || !padecimientosHereditarios) {
-      throw new Error("One or more required fields are missing");
-    }
   
-    try {
+
       // Crear un nuevo paciente utilizando la función de Prisma create
       const nuevoPaciente = await ctx.db.paciente.create({
         data: {
@@ -170,17 +169,14 @@ export const pacienteRouter = createTRPCRouter({
           fechaNacimiento,
           curp,
           nss,
-          genero,
+          sexo,
           padecimientosHereditarios,
         },
       });
       
       // Devolver el paciente recién creado
       return nuevoPaciente;
-    } catch (error: any) {
-      // Manejar cualquier error de base de datos
-      throw new Error(`Failed to create patient: ${error.message}`);
-    }
+
   }),
   
 /**

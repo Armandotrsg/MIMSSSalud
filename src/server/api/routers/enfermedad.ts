@@ -64,7 +64,7 @@ export const enfermedadRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       // Verify if input is valid
-      if (!input || !input.id) {
+      if (!input?.id) {
         throw new Error("ID parameter is missing");
       }
 

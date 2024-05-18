@@ -72,10 +72,6 @@ export const userRouter = createTRPCRouter({
     getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
-      // Verify if input is valid
-      if (!input || !input.id) {
-        throw new Error("ID parameter is missing");
-      }
 
       // Get the user by their ID
       const user = await ctx.db.user.findUnique({

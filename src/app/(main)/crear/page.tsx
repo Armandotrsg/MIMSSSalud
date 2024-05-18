@@ -8,6 +8,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { today, type DateValue } from "@internationalized/date";
+import { api } from "@/trpc/react";
+import { useToast } from "@/components/toast/use-toast";
+
+const sex = ["MASCULINO", "FEMENINO"] as const;
 
 const formSchema = z.object({
   nombre: z.string().min(1, {
@@ -28,7 +32,7 @@ const formSchema = z.object({
   nss: z.string().min(1, {
     message: "Por favor ingresa tu NSS",
   }),
-  sexo: z.enum(["Masculino", "Femenino"]),
+  sexo: z.enum(sex),
   padecimientosHereditarios: z.string().min(1, {
     message: "Por favor ingresa tus padecimientos hereditarios",
   }),
@@ -62,11 +66,6 @@ const normalInputs: NormalInputs[] = [
   },
 ]
 
-const sex = [
-  "Masculino",
-  "Femenino",
-] as const;
-
 export default function CrearPatientPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,13 +76,35 @@ export default function CrearPatientPage() {
       fechaNacimiento: today("America/Mexico_City"),
       curp: "",
       nss: "",
-      sexo: "Masculino",
+      sexo: "MASCULINO",
       padecimientosHereditarios: "",
     },
   });
 
+  const { toast } = useToast();
+
+  const createHook = api.paciente.create.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Paciente creado",
+        description: "El paciente ha sido creado exitosamente",
+      })
+      form.reset();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error al crear paciente",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  });
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    await createHook.mutateAsync({
+      ...values,
+      fechaNacimiento: values.fechaNacimiento.toDate("America/Mexico_City"),
+    });
   };
 
   return (
@@ -104,13 +125,6 @@ export default function CrearPatientPage() {
                 isClearable
                 isRequired
                 onClear={() => form.setValue("nombre", "")}
-                color={
-                  form.formState.errors[input.name]
-                    ? "danger"
-                    : form.formState.submitCount > 0
-                      ? "success"
-                      : "default"
-                }
                 {...field}
               />
             )}
@@ -124,18 +138,11 @@ export default function CrearPatientPage() {
               label="Sexo"
               errorMessage={form.formState.errors.sexo?.message}
               isRequired
-              color={
-                form.formState.errors.sexo
-                  ? "danger"
-                  : form.formState.submitCount > 0
-                    ? "success"
-                    : "default"
-              }
               {...field}
             >
               {sex.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {s}
+                <SelectItem key={s} value={s} className="capitalize">
+                  {s.toLowerCase()}
                 </SelectItem>
               ))}
             </Select>
@@ -149,13 +156,6 @@ export default function CrearPatientPage() {
               label="Fecha de nacimiento"
               errorMessage={fieldState.error?.message}
               isRequired
-              color={
-                form.formState.errors.fechaNacimiento
-                  ? "danger"
-                  : form.formState.submitCount > 0
-                    ? "success"
-                    : "default"
-              }
               {...field}
             />
           )}
@@ -168,14 +168,6 @@ export default function CrearPatientPage() {
             <Textarea
               label="Padecimientos hereditarios"
               errorMessage={fieldState.error?.message}
-              isRequired
-              color={
-                form.formState.errors.padecimientosHereditarios
-                  ? "danger"
-                  : form.formState.submitCount > 0
-                    ? "success"
-                    : "default"
-              }
               {...field}
             />
           )}

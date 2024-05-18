@@ -66,10 +66,6 @@ export const consultaRouter = createTRPCRouter({
     getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
-      // Verify if input is valid
-      if (!input || !input.id) {
-        throw new Error("ID parameter is missing");
-      }
 
       // Get the consultation by its ID
       const consulta = await ctx.db.consulta.findUnique({
