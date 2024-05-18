@@ -14,17 +14,69 @@ datasource db {
     relationMode = "prisma"
 }
 
-model Post {
-    id        BigInt      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Paciente {
+    id                          String   @id @default(cuid())
+    nombre                      String
+    apellidoPaterno             String
+    apellidoMaterno             String
+    fechaNacimiento             DateTime
+    curp                        String
+    nss                         String
+    genero                      String
+    padecimientosHereditarios   String
+    consultas                   Consulta[]   // Relación uno a muchos
+    medicamentos                Medicamento[]   // Relación uno a muchos
+    enfermedades                Enfermedad[]   // Relación uno a muchos
+}
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+model Doctor {
+    id                          String   @id @default(cuid())
+    nombre                      String
+    apellidoPaterno             String
+    apellidoMaterno             String
+    email                       String
+    password                    String
+    curp                        String
+    especialidad                String
+    consultas                   Consulta[]   // Relación uno a muchos
+}
 
-    @@index([name])
-    @@index([createdById])
+model Consulta {
+    id                          String   @id @default(cuid())
+    paciente                    Paciente   @relation(fields: [idPaciente], references: [id])
+    idPaciente                  String
+    doctor                      Doctor     @relation(fields: [idDoctor], references: [id])
+    idDoctor                    String
+    fechaConsulta               DateTime
+    motivoConsulta              String
+    diagnostico                 String
+    tratamiento                 String
+    proximaCita                 DateTime
+    @@index([idPaciente])
+    @@index([idDoctor])
+}
+
+model Medicamento {
+    id                          String   @id @default(cuid())
+    paciente                    Paciente   @relation(fields: [idPaciente], references: [id])
+    idPaciente                  String
+    nombre                      String
+    descripcion                 String
+    dosis                       String
+    indicaciones                String
+    fechaCaducidad              DateTime
+    @@index([idPaciente])
+}
+
+model Enfermedad {
+    id                          String   @id @default(cuid())
+    paciente                    Paciente   @relation(fields: [idPaciente], references: [id])
+    idPaciente                  String
+    nombre                      String
+    descripcion                 String
+    sintomas                    String
+    tratamiento                 String
+    @@index([idPaciente])
 }
 
 // Necessary for Next auth
@@ -65,7 +117,6 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
 }
 
 model VerificationToken {
