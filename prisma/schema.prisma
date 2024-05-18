@@ -11,6 +11,11 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum Sex {
+    MASCULINO
+    FEMENINO
+}
+
 model Paciente {
     id                        String        @id @default(cuid())
     nombre                    String
@@ -19,7 +24,7 @@ model Paciente {
     fechaNacimiento           DateTime
     curp                      String
     nss                       String
-    genero                    String
+    sexo                      Sex
     padecimientosHereditarios String
     consultas                 Consulta[] // Relación uno a muchos
     medicamentos              Medicamento[] // Relación uno a muchos

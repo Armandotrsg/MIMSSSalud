@@ -1,5 +1,5 @@
 import { Input } from "@nextui-org/input";
-import { SearchIcon } from "~/assets/icons/search_icon";
+import { SearchIcon } from "@/assets/icons/search_icon";
 import {
   Modal,
   ModalContent,
@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
-import { FilterIcon } from "~/assets/icons/filter_icon";
+import { FilterIcon } from "@/assets/icons/filter_icon";
 
 interface DataTableHeaderProps {
   searchValue: string;
