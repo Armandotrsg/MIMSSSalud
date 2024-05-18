@@ -24,7 +24,7 @@ importers:
         specifier: ^5.10.2
         version: 5.14.0(@planetscale/database@1.18.0)
       '@prisma/client':
-        specifier: ^5.10.2
+        specifier: ^5.14.0
         version: 5.14.0(prisma@5.14.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.10.1
