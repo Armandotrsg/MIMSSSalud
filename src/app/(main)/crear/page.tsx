@@ -105,7 +105,7 @@ export default function CrearPatientPage() {
                 isRequired
                 onClear={() => form.setValue("nombre", "")}
                 color={
-                  form.formState.errors.nombre
+                  form.formState.errors[input.name]
                     ? "danger"
                     : form.formState.submitCount > 0
                       ? "success"
