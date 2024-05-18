@@ -2,16 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64", "debian-openssl-3.0.x"]
 }
 
 datasource db {
     provider = "cockroachdb"
     url      = env("DATABASE_URL")
-
-    // If you have enabled foreign key constraints for your database, remove this line.
-    relationMode = "prisma"
 }
 
 model Paciente {
@@ -33,7 +30,7 @@ model Consulta {
     id             String   @id @default(cuid())
     paciente       Paciente @relation(fields: [idPaciente], references: [id])
     idPaciente     String
-    doctor         User   @relation(fields: [idDoctor], references: [id])
+    doctor         User     @relation(fields: [idDoctor], references: [id])
     idDoctor       String
     fechaConsulta  DateTime
     motivoConsulta String
@@ -101,14 +98,14 @@ model Session {
 }
 
 model User {
-    id              String    @id @default(cuid())
+    id              String     @id @default(cuid())
     nombre          String?
     apellidoPaterno String
     apellidoMaterno String
     password        String
-    curp            String
+    curp            String     @unique
     especialidad    String
-    email           String?   @unique
+    email           String?    @unique
     emailVerified   DateTime?
     image           String?
     accounts        Account[]

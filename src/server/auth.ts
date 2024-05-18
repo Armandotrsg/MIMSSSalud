@@ -1,14 +1,14 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import { type Adapter } from "next-auth/adapters";
-import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-import { env } from "@/env";
+import { env } from "@/env.js";
 import { db } from "@/server/db";
+import bcrypt from "bcryptjs";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,6 +20,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      // isAdmin: boolean;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -38,30 +39,74 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
+    session: ({ session, token }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub,
+        },
+      };
+    },
+    jwt: (params) => {
+      return {
+        ...params.token,
+        ...params.user,
+      };
+    },
+  },
+  adapter: PrismaAdapter(db),
+  providers: [
+    CredentialsProvider({
+      name: "Email and Password",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "tu@email.com",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "password",
+        },
+      },
+
+      async authorize(credentials) {
+        if (!credentials) {
+          throw new Error("No se han recibido credenciales");
+        }
+        const user = await db.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user?.password) {
+          throw new Error("El usuario o contraseña son incorrectos");
+        }
+
+        const isCorrectPassword = await bcrypt.compare(
+          credentials.password,
+          user.password,
+        );
+
+        if (!isCorrectPassword) {
+          throw new Error("El usuario o contraseña son incorrectos");
+        }
+
+        return user;
       },
     }),
-  },
-  adapter: PrismaAdapter(db) as Adapter,
-  providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
+  secret: env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  pages: {
+    signIn: "/auth/signin",
+    error: "/auth/error",
+  },
 };
 
 /**
