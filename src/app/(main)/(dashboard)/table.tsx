@@ -28,7 +28,7 @@ export function PatientsTable({
       case "nss":
         return row.nss;
       case "sexo":
-        return row.sexo;
+        return <span className="capitalize">{row.sexo.toLowerCase()}</span>;
       case "actions":
         return (
           <Link
