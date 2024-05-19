@@ -31,7 +31,7 @@ export const pacienteRouter = createTRPCRouter({
         limit: z.number().default(10),
         page: z.number().default(1),
         searchName: z.string().optional(),
-        orderBy: z.enum(["nombre", "apellidoPaterno", "apellidoMaterno", "curp"]).optional().default("nombre"),
+        orderBy: z.enum(["nombre", "apellidoPaterno", "apellidoMaterno", "curp", "nss"]).optional().default("nombre"),
         orderDirection: z.enum(["asc", "desc"]).optional().default("asc"),
       })
     )

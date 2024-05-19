@@ -7,6 +7,16 @@ export const patientsColumn: Columns[] = [
     allowSorting: true,
   },
   {
+    key: "apellidoPaterno",
+    label: "Apellido paterno",
+    allowSorting: true,
+  },
+  {
+    key: "apellidoMaterno",
+    label: "Apellido materno",
+    allowSorting: true,
+  },
+  {
     key: "curp",
     label: "CURP",
     allowSorting: true,

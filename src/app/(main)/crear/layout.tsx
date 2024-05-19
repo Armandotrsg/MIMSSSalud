@@ -9,7 +9,7 @@ export default function CrearLayout({
 }) {
   return (
     <main>
-      <header className="flex items-center gap-2">
+      <header className="flex items-center gap-3">
         <Button
           as={Link}
           isIconOnly
