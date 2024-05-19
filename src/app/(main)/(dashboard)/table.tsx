@@ -5,8 +5,9 @@ import { type api } from "@/trpc/react";
 import { type DataProps, DataTable } from "@/components/data-table/DataTable";
 import React from "react";
 import { Button } from "@nextui-org/react";
-import Link from "next/link";
+import NextLink from "next/link";
 import { PlusIcon } from "@/assets/icons/plus_icon";
+import { Link } from "@nextui-org/react";
 
 type Patient = InferQueryLikeData<typeof api.paciente.getAll>["data"][0];
 export function PatientsTable({
@@ -28,6 +29,19 @@ export function PatientsTable({
         return row.nss;
       case "sexo":
         return row.sexo;
+      case "actions":
+        return (
+          <Link
+            isBlock
+            showAnchorIcon
+            color="primary"
+            size="sm"
+            className="cursor-pointer"
+            href={`/${row.id}`}
+          >
+            Ver
+          </Link>
+        );
       default:
         return "";
     }
@@ -43,7 +57,7 @@ export function PatientsTable({
       createButton={
         <Button
           color="primary"
-          as={Link}
+          as={NextLink}
           className="w-full sm:w-auto"
           href="/crear"
           endContent={<PlusIcon />}

@@ -30,4 +30,8 @@ export const patientsColumn: Columns[] = [
     key: "sexo",
     label: "Sexo",
   },
+  {
+    key: "actions",
+    label: "Acciones",
+  }
 ];
