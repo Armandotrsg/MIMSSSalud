@@ -9,11 +9,26 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+      },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", ...fontFamily.sans],
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+      },
+      animation: {
+        decrease: "decrease 3.7s normal ease-out 1",
+      },
+      keyframes: {
+        decrease: {
+          "0%": { width: "100%" },
+          "100%": { width: "0%" },
+        },
       },
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [nextui(), require("tailwindcss-animate")],
 } satisfies Config;
