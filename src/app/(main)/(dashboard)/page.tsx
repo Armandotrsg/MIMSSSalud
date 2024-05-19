@@ -35,12 +35,10 @@ export default async function Home({ searchParams }: DataTableSearchParams) {
   });
 
   return (
-    <main>
-      <PatientsTable
-        columns={columns}
-        data={pacientes.data}
-        totalRecords={pacientes.meta.total}
-      />
-    </main>
+    <PatientsTable
+      columns={columns}
+      data={pacientes.data}
+      totalRecords={pacientes.meta.total}
+    />
   );
 }
