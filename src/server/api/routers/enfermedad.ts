@@ -1,10 +1,9 @@
 import { z } from "zod";
 
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import {
   createTRPCRouter,
-  publicProcedure,
   protectedProcedure
 } from "@/server/api/trpc";
 
